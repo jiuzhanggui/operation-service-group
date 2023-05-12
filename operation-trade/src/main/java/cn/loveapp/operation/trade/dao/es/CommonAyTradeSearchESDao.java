@@ -93,8 +93,8 @@ public class CommonAyTradeSearchESDao extends BaseElasticsearchDao {
             boolQueryBuilder.must(QueryBuilders.termQuery(EsFields.tid, tid));
         }
 
-        if (StringUtils.isAnyBlank(platformId, appName)) {
-            boolQueryBuilder.must(QueryBuilders.termQuery(EsFields.sellerId, platformId));
+        if (StringUtils.isNotEmpty(platformId)) {
+            boolQueryBuilder.must(QueryBuilders.termQuery(EsFields.storeId, platformId));
         }
 
         appName = cheakAppName(platformId, appName);
