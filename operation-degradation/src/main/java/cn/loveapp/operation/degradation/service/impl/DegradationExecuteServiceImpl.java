@@ -116,7 +116,7 @@ public class DegradationExecuteServiceImpl implements DegradationExecuteService 
     private DegradationTask executeApolloInteriorDegradationTask(DegradationTask degradationTask) {
         DegradationTask.DegradationTaskParameter degradationTaskConfig =
             degradationTask.getDDegradationTaskConfig(degradationTask.getConfigurationParameter());
-        String env = "dev";
+        String env = degradationConfiguration.getApolloEnv();
         // apollo中项目id
         String appId = degradationTaskConfig.getProjectId();
         // 操作的用户

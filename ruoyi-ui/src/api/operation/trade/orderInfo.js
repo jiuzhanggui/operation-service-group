@@ -54,19 +54,25 @@ export function getRefundOrderInfoAPI(params) {
 }
 
 /**
- * 淘宝FullInfo请求API
+ * 平台订单详情请求API
  * @param params
  * @returns {AxiosPromise}
  */
-export function getFullInfoAPI(params) {
-  return http.post(`${request}/orderinfo/orderfullinfo.list.get`, params)
-}
+export function getPlatformOrderInfo(params) {
+  return request({
+    url: `operation/orderInfo/getPlatformOrderInfo`,
+    method: 'post',
+    data: params,
+  })}
 
 /**
- * 淘宝退款请求API
+ * 平台订单退款请求API
  * @param params
  * @returns {AxiosPromise}
  */
-export function getRefundGetInfoAPI(params) {
-  return http.post(`${request}/orderinfo/refundorderapiinfo.list.get`, params)
-}
+export function getPlatformOrderRefundInfo(params) {
+  return request({
+    url: `operation/orderInfo/getPlatformOrderRefundInfo`,
+    method: 'post',
+    data: params,
+  })}

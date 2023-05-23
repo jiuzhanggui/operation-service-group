@@ -12,7 +12,7 @@
       <div slot="label" @click="getMongoMainOrderInfo">Mongo主单数据库</div>
       <!--json展示-->
       <JsonView ref="mangoMainOrderData"></JsonView>
-      <!--数据库展示-->
+      <!--table展示-->
       <!--<TcOrderTable ref="mangoMainOrderData"></TcOrderTable>-->
     </el-tab-pane>
 
@@ -20,7 +20,7 @@
       <div slot="label" @click="getMongoSubOrderInfo">Mongo子单数据库</div>
       <!--json展示-->
       <JsonView ref="mangoSubOrderData"></JsonView>
-      <!--数据库展示-->
+      <!--table展示-->
       <!--<SubOrderTable ref="mangoSubOrderData"></SubOrderTable>-->
     </el-tab-pane>
 
@@ -28,18 +28,25 @@
       <div slot="label" @click="getRefundOrder">退款订单库</div>
       <!--json展示-->
       <JsonView ref="refundOrderData"></JsonView>
-      <!--数据库展示-->
+      <!--table展示-->
       <!--<RefundOrderTable ref="refundOrderData"></RefundOrderTable>-->
     </el-tab-pane>
 
     <el-tab-pane label="FullInfoAPI返回信息">
       <div slot="label" @click="getOrderFullInfoApiInfo">FullInfoAPI返回信息</div>
-      <FullInfoTable ref="OrderFullInfoData"></FullInfoTable>
+      <!--json展示-->
+      <JsonView ref="OrderFullInfoData"></JsonView>
+      <!--table展示-->
+<!--      <FullInfoTable ref="OrderFullInfoData"></FullInfoTable>-->
     </el-tab-pane>
 
     <el-tab-pane label="退款API结果">
       <div slot="label" @click="getOrderRefundApiInfo">退款API结果</div>
-      <RefundApiTable ref="refundAPIData"></RefundApiTable>
+      <!--json展示-->
+      <JsonView ref="refundAPIData"></JsonView>
+      <!--table展示-->
+<!--      <RefundApiTable ref="refundAPIData"></RefundApiTable>-->
+
     </el-tab-pane>
 
   </el-tabs>
@@ -54,7 +61,13 @@ import RefundOrderTable from "@/views/operation/trade/view/table/RefundOrderTabl
 import RefundApiTable from "@/views/operation/trade/view/table/RefundApiTable";
 import TcOrderTable from "@/views/operation/trade/view/table/TcOrderTable";
 import JsonView from "@/views/operation/trade/common/JsonView.vue";
-import {getOrderInfoAPI, getSuOrderInfoAPI, getRefundOrderInfoAPI, getEsInfoAPI} from "@/api/operation/trade/orderInfo";
+import {
+  getOrderInfoAPI,
+  getSuOrderInfoAPI,
+  getRefundOrderInfoAPI,
+  getEsInfoAPI,
+  getPlatformOrderInfo, getPlatformOrderRefundInfo
+} from "@/api/operation/trade/orderInfo";
 
 export default {
   name: "OrderInfoList",
@@ -229,11 +242,24 @@ export default {
           center: true
         });
       } else {
-        // getFullInfoAPI(userInfo).then(res => {
-        //   let body = res.data.body;
-        //   this.orderResultList = body
-        //   this.$refs.OrderFullInfoData.getData(body)
-        // })
+        getPlatformOrderInfo(userInfo).then(res => {
+          if (res.code === 200) {
+            this.$message({
+              type: 'success',
+              message: res.msg,
+              center: true
+            });
+            let body = res.data;
+            this.orderResultList = body
+            this.$refs.OrderFullInfoData.getData(body)
+          } else {
+            this.$message({
+              type: 'error',
+              message: res.msg,
+              center: true
+            });
+          }
+        })
       }
     },
 
@@ -249,11 +275,24 @@ export default {
           center: true
         });
       } else {
-        // getRefundGetInfoAPI(userInfo).then(res => {
-        //   let body = res.data.body;
-        //   this.orderResultList = body
-        //   this.$refs.refundAPIData.getData(body)
-        // })
+        getPlatformOrderRefundInfo(userInfo).then(res => {
+          if (res.code === 200) {
+            this.$message({
+              type: 'success',
+              message: res.msg,
+              center: true
+            });
+          let body = res.data;
+          this.orderResultList = body
+          this.$refs.refundAPIData.getData(body)
+          } else {
+            this.$message({
+              type: 'error',
+              message: res.msg,
+              center: true
+            });
+          }
+        })
       }
     },
   }

@@ -1,18 +1,19 @@
 package com.ruoyi.web.controller.trade;
 
-import com.ruoyi.operation.common.constant.CommonPlatformConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.operation.common.constant.CommonPlatformConstants;
 import com.ruoyi.operation.common.constant.ResponseConstant;
 import com.ruoyi.operation.common.dto.request.GetOrderInfoRequest;
-import com.ruoyi.operation.common.web.CommonApiResponse;
+import com.ruoyi.operation.common.utils.HttpUtil;
 
+import cn.loveapp.operation.trade.config.RequestAddressConfig;
 import cn.loveapp.operation.trade.dao.es.CommonAyTradeSearchESDao;
 import cn.loveapp.operation.trade.dao.mongo.OrderRefundRepository;
 import cn.loveapp.operation.trade.dao.mongo.OrderRepository;
@@ -40,6 +41,9 @@ public class OrderInfoController {
     @Autowired
     private CommonAyTradeSearchESDao commonAyTradeSearchESDao;
 
+    @Autowired
+    private RequestAddressConfig requestAddressConfig;
+
     @RequestMapping(value = "/getEsOrderInfo")
     public AjaxResult getEsOrderInfo(@RequestBody UserProblemAnalysisRequest request) {
         String tid = request.getTid();
@@ -60,7 +64,6 @@ public class OrderInfoController {
 
     @RequestMapping(value = "/getOrderInfo")
     public AjaxResult getTcOrderInfo(@RequestBody GetOrderInfoRequest request) {
-
         if (StringUtils.isEmpty(request.getTid())) {
             return AjaxResult.warn(ResponseConstant.PARAMSE_RROR.getMessage());
         }
@@ -73,7 +76,6 @@ public class OrderInfoController {
 
     @RequestMapping(value = "/getSubOrderInfo")
     public AjaxResult getTcSubOrderInfo(@RequestBody GetOrderInfoRequest request) {
-
         if (StringUtils.isEmpty(request.getTid())) {
             return AjaxResult.warn(ResponseConstant.PARAMSE_RROR.getMessage());
         }
@@ -87,7 +89,6 @@ public class OrderInfoController {
 
     @RequestMapping(value = "/getRefundOrderInfo")
     public AjaxResult getRefundOrderInfo(@RequestBody GetOrderInfoRequest request) {
-
         if (StringUtils.isEmpty(request.getTid())) {
             return AjaxResult.warn(ResponseConstant.PARAMSE_RROR.getMessage());
         }
@@ -96,5 +97,29 @@ public class OrderInfoController {
         String platformId = request.getPlatformId();
         String appName = request.getAppName();
         return AjaxResult.success(orderRefundRepository.queryAllByTid(tid, platformId, appName));
+    }
+
+    @RequestMapping(value = "/getPlatformOrderInfo")
+    public AjaxResult getPlatformOrderInfo(@RequestBody GetOrderInfoRequest request) {
+        if (StringUtils.isEmpty(request.getTid())) {
+            return AjaxResult.warn(ResponseConstant.PARAMSE_RROR.getMessage());
+        }
+
+        String body = HttpUtil.urlHttp(requestAddressConfig.getOrderInfoUrl(),
+            requestAddressConfig.getPlatformOrderInfoPath(), JSON.toJSONString(request));
+
+        return AjaxResult.success(JSON.parse(body));
+    }
+
+    @RequestMapping(value = "/getPlatformOrderRefundInfo")
+    public AjaxResult getPlatformOrderRefundInfo(@RequestBody GetOrderInfoRequest request) {
+        if (StringUtils.isEmpty(request.getTid())) {
+            return AjaxResult.warn(ResponseConstant.PARAMSE_RROR.getMessage());
+        }
+
+        String body = HttpUtil.urlHttp(requestAddressConfig.getOrderInfoUrl(),
+            requestAddressConfig.getPlatformOrderRefundInfoPath(), JSON.toJSONString(request));
+
+        return AjaxResult.success(JSON.parse(body));
     }
 }

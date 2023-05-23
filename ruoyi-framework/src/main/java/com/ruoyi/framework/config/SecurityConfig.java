@@ -116,7 +116,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
             .antMatchers(HttpMethod.GET, "/", "/index", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/static/**",
                 "/static/dist/**", "/profile/**").permitAll()
             // dist文件配置
-            .antMatchers(HttpMethod.GET, "/**/index", "/**/*.html", "/**/**/*.html", "/**/**/*.css", "/**/**/*.js",
+            .antMatchers(HttpMethod.GET, "/**/index", "/**/*.html", "/**/**/*.html", "/**/**/*.css", "/**/**/*.js", "/*.png",
                 "/static/**/**").permitAll()
             .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**")
             .permitAll()
